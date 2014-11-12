@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <?php
 include('libreria/motor.php');
 require_once("clases/sesion.class.php");
@@ -8,17 +14,10 @@ $cit=new cita();
 //$login=new Login();
    $sesion = new Sesion();
    $usuario = $sesion->get("usuario");
+   
    if( $usuario == false )  {
       header("Location: login.php");
    }  else  {
-	
-	if(isset($_POST['boton'])){
-	
-	$cod_emp=$_POST['opcion_emp'];
-        $cod_cita=$_POST['opcion_cita'];
-
-	
-	$resp_update= $cit->actualizar_cita($cod_emp,$cod_cita);}
    
 
    
@@ -39,36 +38,21 @@ $emp=new empleado();
 	}
 	else if($cargo==2)
 	{
-		$mensaje1="Nuevos Citas";
-                $mensaje1_2="Ver Citas sin asignar";
-		$mensaje2="Total Asignadas";
-		$mensaje3="Nuevas Ordenes";
-		$mensaje4="Instalaciones";
-		$url1="modulo_ventas_supervisor.php";
-		$url2="citas_asignadas_vendedores.php";
-                $urlasig2_1="index.php";
-                $urlasig2_2="modulo_ventas_supervisor.php";
-                $urlasig2_3="citas_asginadas_vendedores.php";
-                $urlasig2_4="citas_canceladas.php";
-                $envio="Cita";
-                $envio2_2="Citas Sin asignar";
-                $envio2_3="Citas Asignadas";
-                $envio2_4="Citas canceladas";
-	}else if($cargo==3){
 		$mensaje1="Citas Pendientes";
-                $mensaje1_3="Ver Citas";
+                $mensaje1_3="Ver Citas Pendientes";
 		$mensaje2="Citas Confirmadas";
+                $mensaje2_3="Ver Citas Confirmadas";
 		$mensaje3="Cotizacion Pendientes";
 		$mensaje4="Recibos Provicionales";
-		$url1="Modulo_Ventas/modulo_ventas.php";
-		$url2="confirmar_cita.php";
+		$url1="modulo_ventas.php";
+		$url2="citas_programadas.php";
                 $urlasig="index.php";
                 $envio="Cita";
                 $urlasig2="crear_cita_local.php";
-                $urlasig3="confirmar_cita.php";
+                $urlasig3="citas_asignadas.php";
                 $urlasig4="cancelar_cita.php";
                 $urlasig5="index.php";
-                $urlasig6="modulo_ventas.php";
+                $urlasig6="citas_programadas.php";
                 $urlasig7="consultar_cotizacion.php";
                 $urlasig8="consultar_recibo_provisional.php";
                 $urlasig9="consultar_orden_trabajo.php";
@@ -80,7 +64,7 @@ $emp=new empleado();
                 $envio3="Confrmar Cita";
                 $envio4="Cancelar Cita";
                 $envio5="Consultas";
-                $envio6="Citas Asginadas";
+                $envio6="Citas Programadas";
                 $envio7="Cotizacion";
                 $envio8="Recibo Provisional";
                 $envio9="Orden de Trabajo";
@@ -88,9 +72,60 @@ $emp=new empleado();
                 $envio11="Crear Cotizacion";
                 $envio12="Crear Recibo Provisional";
                 $envio13="Crear Factura";
+                if(isset($_POST['enviar'])){
+        if($_POST['nombre'] == ''){
+        }else if($_POST['apellido'] == ''){
+        }else if($_POST['direccion'] == ''){
+        }else if($_POST['telefono'] == ''){
+        }else if($_POST['email'] == ''){
+        }else if($_POST['mensaje'] == ''){
+        }elseif($_POST['hora_programada'] == '') { 
+        }elseif($_POST['fecha_programada'] == ''){
+        }else{
+            $nombre = $_POST['nombre'];
+            $email = $_POST['email'];
+            $cuerpo = $_POST['mensaje'];
+            //se ingresan los datos a la entidad cita
+                 if(1==1){
+                           $cit=new cita();
+                           $id_cita=$cit->secqnos();
+                           $cit->id_cita=$id_cita;
+                           $cit->fecha_creacion=date("Y-m-d H:i:s");
+                           $cit->fecha_programada=$_POST['fecha_programada'];
+                           $cit->hora=$_POST['hora_programada'];
+                           $cit->nombre=$nombre;
+                           $cit->apellido=$_POST['apellido'];
+                           $cit->telefono=$_POST['telefono'];
+                           $cit->direccion=$_POST['direccion'];
+                           $cit->email=$email;
+                           $cit->id_canal=2;
+                           $cit->id_estado=2;
+                           $cit->comentario=$cuerpo;
+						   $cit->id_empleado=$usuario;
+
+                           $result=$cit->agregar();
+                           if($result>0){
+                              $result = 'se ingreso registro';
+                               $cit->Upsecqnos();
+                           }else{
+                              $result = 'error al enviar el msj';
+                           }
+
+               // $sql = "INSERT INTO `cf` (`nombre`,`email`,`asunto`,`mensaje`) VALUES ('{$_POST['nombre']}','{$_POST['email']}','{$_POST['asunto']}','{$_POST['mensaje']}')";
+               // mysql_query($sql) or die(mysql_error());
+ 
+
+                // si el envio fue exitoso reseteamos lo que el usuario escribio:
+//                $_POST['nombre'] = '';
+//                $_POST['email'] = '';
+//                $_POST['asunto'] = '';
+//                $_POST['mensaje'] = '';
+ 
+            }
+        }
+    }
 	
 	}
-
 	
 function fechainteligente($timestamp) 
 {
@@ -357,7 +392,7 @@ function ConSoSinS($val, $sentence)
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="/Alfinte/logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -371,7 +406,7 @@ function ConSoSinS($val, $sentence)
                     <ul class="nav" id="side-menu">
 
                         <li>
-                            <a class="active" href="modulo_ventas_supervisor.php"><i class="fa fa-dashboard fa-fw"></i> Panel de Control</a>
+                            <a class="active" href="modulo_ventas.php"><i class="fa fa-dashboard fa-fw"></i> Panel de Control</a>
                         </li>
                         <li>
                             <a href="index.php"><i class="fa fa-bar-chart-o fa-fw"></i> Ventas<span class="fa arrow"></span></a>
@@ -385,29 +420,6 @@ function ConSoSinS($val, $sentence)
 											}
 											else if($cargo==2)
 											{
-												$url_asignada=$urlasig2_1;
-                                                                                                $url_asignada2=$urlasig2_2;
-                                                                                                $url_asignada3=$urlasig2_3;
-                                                                                                $url_asignada4=$urlasig2_4;
-                                                                                                $ir_a=$envio;
-                                                                                                $ir_a2=$envio2_2;
-                                                                                                $ir_a3=$envio2_3;
-                                                                                                $ir_a4=$envio2_4;
-                                                                                                echo"<a href='".$url_asignada."'>".$ir_a."<span class='fa arrow'></span></a> 
-                                                                                            <ul class='nav nav-third-level'>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada2."'>".$ir_a2."</a>
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada3."'>".$ir_a3."</a>
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada4."'>".$ir_a4."</a>
-                                                                                                </li>
-                                                                                                </ul>
-                                                                                               </li>";
-											}
-                                                                                        else if($cargo==3){
                                                                                             $url_asignada=$urlasig;
                                                                                             $ir_a=$envio;
                                                                                             $url_asignada2=$urlasig2;
@@ -592,7 +604,7 @@ function ConSoSinS($val, $sentence)
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li><a href="/Alfinte/logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+						 <li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -604,298 +616,76 @@ function ConSoSinS($val, $sentence)
             <!-- Page Content -->
             <div id="page-wrapper">
             <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Panel de control</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-									<?php
-										if ($cargo==1)
-											{
-											$rcate=$cit->cantidad_citas_user($usuario);
-											}
-											else if($cargo==2)
-											{
-												$rcate=$cit->cantidad_citas_user($usuario);
-											}else if($cargo==3){
-												$rcate=$cit->cantidad_cita_pendiente($usuario);
-											};
-											foreach($rcate as $ci){
-											$numero=$ci['numeroCita'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numero; ?></div>
-                                    <div><?php echo $mensaje1;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="<?php echo $url1; ?>">
-                            <div class="panel-footer">
-                                <?php
-										if ($cargo==1)
-											{
-											$mensaje_mostar=$mensaje1_1;
-											}
-											else if($cargo==2)
-											{
-												$mensaje_mostar=$mensaje1_2;
-											};
-									?>
-                                <span class="pull-left"><?php echo $mensaje_mostar; ?></span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-tasks fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-								<?php
-										if ($cargo==1)
-											{
-											$rcate=$cit->cantidad_cita_asignada();
-											}
-											else if($cargo==2)
-											{
-												$rcate=$cit->cantidad_cita_asignada();	
-											}else if($cargo==3){
-												$rcate=$cit->cantidad_cita_confirmada($usuario);
-											};
-										
-											foreach($rcate as $ci){
-											$numero=$ci['numeroAsi'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numero; ?></div>
-                                    <div><?php echo $mensaje2;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href='<?php echo $url2; ?>'>
-                            <div class="panel-footer">
-                                <span class="pull-left">Ver Asignaciones</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-shopping-cart fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-								<?php	if ($cargo==1)
-											{
-											$rcate=$cit->cantidad_or();
-											}
-											else if($cargo==2)
-											{
-												$rcate=$cit->cantidad_or();	
-											}else if($cargo==3){
-												$rcate=$cit->cantidad_cita_confirmada($usuario);
-											};
-										
-										$rcate=$cit->cantidad_or_user($usuario);
-											foreach($rcate as $ci){
-											$numeroO=$ci['numeroOr'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numeroO; ?></div>
-                                    <div><?php echo $mensaje3;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">Ver Detalles</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-support fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-								<?php
-										$rcate=$cit->cantidad_ins();
-											foreach($rcate as $ci){
-											$numeroi=$ci['numeroIns'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numeroi; ?></div>
-                                    <!--<div class="huge">13</div>-->
-                                    <div><?php echo $mensaje4;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">Ver Detalles</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>	
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Muestra el listado de las citas mas recientes
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>Cita</th>
-                                            <th>Fecha</th>
-                                            <th>Nombre</th>
-                                            <th>Telefono</th>
-                                            <th>Direccion</th>
-                                            <th>Email</th>
-                                            <th>Canal</th>
-                                            <th>Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $rcitas = $cit->mostrar_supervisor();
-                                        foreach ($rcitas as $ci) {
-                                            echo "
-										<tr>
-											<td>{$ci['id_cita']}</td>
-											<td>{$ci['fecha_creacion']}</td>
-											<td>{$ci['nombre']}</td>
-											<td>{$ci['telefono']}</td>
-											<td>{$ci['direccion']}</td>
-											<td>{$ci['email']}</td>
-											<td>{$ci['descripcion']}</td>
-											<td>"
-                                            ?>
-                                        <div class="col-lg-6">
-                                            <div class="panel panel-default">
-                                                <!-- /.panel-heading -->
-                                                <!--<div class="panel-body">-->
-                                                <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"  >
-                                                    Asignar
-
-                                                </button>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                                <h5 class="modal-title" id="myModalLabel">Formulario para Asignr Vendedor</h5>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form role="form" action="citas_asignadas_vendedores.php" method="POST">
-                                                                <!--<input type='hidden'  name='numerocitas'><?//php echo $ci['id_cita'] ?></input>-->
-                                                                    <div class="form-group">
-                                                                        <label>Asignar a:</label>
-                                                                        <select class="form-control" name="opcion_emp">
-                                                                            <?php
-                                                                            $reemp = $emp->mostrar();
-                                                                            foreach ($reemp as $ci2) {
-                                                                                $id_empleado = $ci2['id_empleado'];
-                                                                                $nombre = $ci2['nombre'];
-
-                                                                                echo "
-																										<option value='" . $id_empleado . "'>" . $nombre . "</option>
-																										";
-                                                                            };
-                                                                            ?>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                            <label>Confirmar No.Cita</label>
-                                                                            <select class="form-control"name="opcion_cita">
-                                                                                <?php
-                                                                                $ncita = $cit->mostrar_numero_cita_penditente2();
-                                                                                foreach ($ncita as $citid) {
-                                                                                    $id_cita2 = $citid['citNombre'];
-                                                                                    $id_cita1 = $citid['id_cita'];
-
-
-                                                                                    echo"    <option value = '" . $id_cita1 . "'>" . $id_cita2 . "</option>";
-                                                                                };
-                                                                                ?>
-                                                                            </select>
-                                                                        </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                                        <button type="submit" class="btn btn-primary" name="boton">Guardar Cambios</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-
-                                                        </div>
-                                                        <!-- /.modal-content -->
-                                                    </div>
-                                                    <!-- /.modal-dialog -->
+                <form role="form" action="crear_cita_local.php"  method="post">
+                                    <div class="col-lg-8">
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading">
+                                                    Ingreso de Nueva Cita
                                                 </div>
 
-                                                <!-- /.modal -->
-                                                <!--</div>-->
-                                                <!-- .panel-body -->
-                                            </div>
-                                            <!-- /.panel -->
-                                        </div>
-                                        <?php
-                                        echo"
-										</td>
-										</tr>";
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.table-responsive -->
+                                                <div class="panel-body">
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label>Nombre</label>
+                                                            <input class="form-control" name="nombre" placeholder="nombre" required="Ingrese el nombre" pattern="[a-Z]">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Telefono</label>
+                                                            <input class="form-control" type="number"name="telefono" required="Ingrese el telefono" placeholder="7xxx-xxx o 2xxx-xxxx" pattern="\d{4}[\-]\d{4}" min="2000">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Email</label>
+                                                            <input type="email" class="form-control" name="email" placeholder="email" required="Ingrese el email">
 
-                        </div>
-                        <!-- /.panel-body -->
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label>Apellido</label>
+                                                            <input class="form-control" name="apellido" placeholder="apellido" required="Ingrese el apellido" pattern="[a-Z]">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Direccion</label>
+                                                            <input class="form-control" name="direccion"placeholder="direccion" required="Direccion" >
+
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Fecha de visita</label>
+                                                           
+                                                            <input class='form-control' type='date' name='fecha_programada'  required  min='<?php echo date("Y")?>-<?php echo date("m")?>-<?php echo date("d")?>' max='2015-12-31'>        
+
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Hora de visita</label>
+                                                            <input class="form-control" type="time" name="hora_programada" required="Ingrese la hora de visita" min="08:30:00" max="17:30:00">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <div class="form-group">
+                                                            <label>Asunto de la cita</label>
+                                                            <textarea class="form-control" placeholder="comentarios" name="mensaje" rows="4" required="Ingrese el asunto" pattern="[a-Z-0-9]{100}"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                </div> 
+                                                <div class="panel-footer">
+                                                    <button type="submit" class="btn btn-outline btn-success" name="enviar">Aceptar</button>
+                                                     <?php if(isset($result)) { echo $result; } ?>
+                                                    <button type="button" class="btn btn-outline btn-danger"><a href="modulo_ventas.php">Cancelar</a></button>
+                                                     <button type="reset" class="btn btn-outline btn-warning">Comenzar de nuevo</button>
+                                                </div>
+                                            </div>
+                                        </div>
+					
+					
+				</form>
                     </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-12 -->
             </div>
-            
+            <!-- /.row -->
+            </div>
             <!-- /#wrapper -->
         </div>
             <!-- jQuery Version 1.11.0 -->

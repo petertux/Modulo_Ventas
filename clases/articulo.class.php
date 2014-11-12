@@ -13,6 +13,14 @@
     public $id_art_precio;
     public $fecha_desde;
     public $fecha_hasta;
+	public $id_coti_detalle;
+	public $cantidad;
+	public $total;
+	public $alto;
+    public $largo;
+    public $area;
+	public $volumen;
+    public $id_cotizacion;
 
 
      public function agregar(){
@@ -47,6 +55,7 @@
         $num = trim($row[0]);}
          $num = (int)$num+1;
       $query= "UPDATE seqnos set siguiente='".$num."'where tabla='".$tabla."'";
+        echo $query;
         $resultado = mysql_query($query) or die ("Problema con query");
            return $resultado;
 		}
@@ -265,6 +274,44 @@
           }
             return $array;
         }
+     public function mostrar3($id){
+        $query="SELECT `id_articulo`,
+						`articulo_ter`.`descripcion`,
+						`articulo_pre`.`precio` `precio`
+						FROM `articulo_ter`,`articulo_cat`,`articulo_pre`
+						WHERE  `articulo_ter`.`id_categoria` =`articulo_cat`.`id_categoria`
+						AND `articulo_ter`.`id_precio` = `articulo_pre`.`id_art_pre`
+						AND `id_articulo` =" . $id;
+						//INNER JOIN  `cita_estado` ON `cita`.id_estado = `cita_estado`.id_citaest limit 9";
+
+		//echo $query;
+		//die();
+						
+        $rs=mysql_query($query);
+        $array=array();
+        while($fila=mysql_fetch_assoc($rs)){
+          $array[]=$fila;
+        }
+             return $array;
+        }
+		
+		
+		public function cotizacion_detalle(){
+    $query="INSERT INTO cotizacion_detalle VALUES ('{$this->id_coti_detalle}',
+                                        '{$this->cantidad}',
+                                        '{$this->precio}',
+                                        '{$this->total}',
+										'{$this->alto}',
+                                        '{$this->ancho}',
+										'{$this->largo}',
+										'{$this->area}',
+										'{$this->volumen}',
+										'{$this->id_articulo}',
+										'{$this->id_cotizacion}')";
+     $result=mysql_query($query) or die ("Problema con query de Insertar");
+	 echo $query;
+     return $result;
+    }
 
 }
 ?>

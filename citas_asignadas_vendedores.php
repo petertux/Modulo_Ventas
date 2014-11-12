@@ -1,31 +1,17 @@
 <?php
 include('libreria/motor.php');
 require_once("clases/sesion.class.php");
-$cit=new cita();
-
-
-       
 //$login=new Login();
    $sesion = new Sesion();
    $usuario = $sesion->get("usuario");
    if( $usuario == false )  {
       header("Location: login.php");
    }  else  {
-	
-	if(isset($_POST['boton'])){
-	
-	$cod_emp=$_POST['opcion_emp'];
-        $cod_cita=$_POST['opcion_cita'];
 
-	
-	$resp_update= $cit->actualizar_cita($cod_emp,$cod_cita);}
-   
-
-   
-
+$emp=new empleado();
+   $cit=new cita();
 $art=new articulo();
 $materiales=new materia();
-$emp=new empleado();
 	$cargo=$cit->sabercargo($usuario);
 	if ($cargo==1)
 	{
@@ -64,18 +50,18 @@ $emp=new empleado();
 		$url2="confirmar_cita.php";
                 $urlasig="index.php";
                 $envio="Cita";
-                $urlasig2="crear_cita_local.php";
-                $urlasig3="confirmar_cita.php";
-                $urlasig4="cancelar_cita.php";
+                $urlasig2="Modulo_Ventas/crear_cita_local.php";
+                $urlasig3="Modulo_Ventas/confirmar_cita.php";
+                $urlasig4="Modulo_Ventas/cancelar_cita.php";
                 $urlasig5="index.php";
-                $urlasig6="modulo_ventas.php";
-                $urlasig7="consultar_cotizacion.php";
-                $urlasig8="consultar_recibo_provisional.php";
-                $urlasig9="consultar_orden_trabajo.php";
+                $urlasig6="Modulo_Ventas/modulo_ventas.php";
+                $urlasig7="Modulo_Ventas/consultar_cotizacion.php";
+                $urlasig8="Modulo_Ventas/consultar_recibo_provisional.php";
+                $urlasig9="Modulo_Ventas/consultar_orden_trabajo.php";
                 $urlasig10="index.php";
-                $urlasig11="crear_cotizacion.php";
-                $urlasig12="crear_recibo_provisional.php";
-                $urlasig13="crear_factura.php";
+                $urlasig11="Modulo_Ventas/crear_cotizacion.php";
+                $urlasig12="Modulo_Ventas/crear_recibo_provisional.php";
+                $urlasig13="Modulo_Ventas/crear_factura.php";
                 $envio2="Crear Cita";
                 $envio3="Confrmar Cita";
                 $envio4="Cancelar Cita";
@@ -90,7 +76,6 @@ $emp=new empleado();
                 $envio13="Crear Factura";
 	
 	}
-
 	
 function fechainteligente($timestamp) 
 {
@@ -113,10 +98,22 @@ function ConSoSinS($val, $sentence)
 {
 	if ($val > 1) return $val.str_replace(array('(s)','(es)'),array('s','es'), $sentence); 
 	else return $val.str_replace('(s)', '', $sentence);
-} 
+}
 
 
 
+	if(isset($_POST['boton'])){
+	
+	$cod_emp=$_POST['opcion_emp'];
+        $cod_cita=$_POST['opcion_cita'];
+
+	
+	$resp_update= $cit->actualizar_cita($cod_emp,$cod_cita);
+	
+
+	
+	
+	}
 
 ?>
 <!DOCTYPE html>
@@ -130,7 +127,7 @@ function ConSoSinS($val, $sentence)
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Modulo Ventas</title>
+        <title>Modulo Supervisor</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -156,6 +153,7 @@ function ConSoSinS($val, $sentence)
     <body>
 
         <div id="wrapper">
+  <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -371,7 +369,7 @@ function ConSoSinS($val, $sentence)
                     <ul class="nav" id="side-menu">
 
                         <li>
-                            <a class="active" href="modulo_ventas_supervisor.php"><i class="fa fa-dashboard fa-fw"></i> Panel de Control</a>
+                            <a class="active" href="modulo_ventas_supervisor.php"><i class="fa fa-dashboard fa-fw"></i>
                         </li>
                         <li>
                             <a href="index.php"><i class="fa fa-bar-chart-o fa-fw"></i> Ventas<span class="fa arrow"></span></a>
@@ -592,7 +590,7 @@ function ConSoSinS($val, $sentence)
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li><a href="/Alfinte/logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+						 <li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -601,11 +599,11 @@ function ConSoSinS($val, $sentence)
             <!-- /.navbar-static-side -->
         </nav>
 
-            <!-- Page Content -->
-            <div id="page-wrapper">
+        <!-- Page Content -->
+        <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Panel de control</h1>
+                    <h1 class="page-header" align=center>Asignacion de citas</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -767,13 +765,12 @@ function ConSoSinS($val, $sentence)
                         </a>
                     </div>
                 </div>
-            </div>	
-
-            <div class="row">
+                
+<div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Muestra el listado de las citas mas recientes
+                            Muestra el listado de los Vendedores con citas
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -781,105 +778,28 @@ function ConSoSinS($val, $sentence)
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>Cita</th>
-                                            <th>Fecha</th>
+                                            <th>No. Empleado</th>
                                             <th>Nombre</th>
-                                            <th>Telefono</th>
-                                            <th>Direccion</th>
-                                            <th>Email</th>
-                                            <th>Canal</th>
-                                            <th>Editar</th>
+                                            <th>Citas Asignadas</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $rcitas = $cit->mostrar_supervisor();
-                                        foreach ($rcitas as $ci) {
+                                        $remp = $emp->mostrar_citasAsi();
+                                        foreach ($remp as $re) {
                                             echo "
 										<tr>
-											<td>{$ci['id_cita']}</td>
-											<td>{$ci['fecha_creacion']}</td>
-											<td>{$ci['nombre']}</td>
-											<td>{$ci['telefono']}</td>
-											<td>{$ci['direccion']}</td>
-											<td>{$ci['email']}</td>
-											<td>{$ci['descripcion']}</td>
-											<td>"
-                                            ?>
-                                        <div class="col-lg-6">
-                                            <div class="panel panel-default">
-                                                <!-- /.panel-heading -->
-                                                <!--<div class="panel-body">-->
-                                                <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"  >
-                                                    Asignar
+											<td>{$re['id_empleado']}</td>
+											<td>{$re['nombre']}</td>
+											<td>{$re['cita']}</td>
+											
+										"
+?>
 
-                                                </button>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                                <h5 class="modal-title" id="myModalLabel">Formulario para Asignr Vendedor</h5>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form role="form" action="citas_asignadas_vendedores.php" method="POST">
-                                                                <!--<input type='hidden'  name='numerocitas'><?//php echo $ci['id_cita'] ?></input>-->
-                                                                    <div class="form-group">
-                                                                        <label>Asignar a:</label>
-                                                                        <select class="form-control" name="opcion_emp">
-                                                                            <?php
-                                                                            $reemp = $emp->mostrar();
-                                                                            foreach ($reemp as $ci2) {
-                                                                                $id_empleado = $ci2['id_empleado'];
-                                                                                $nombre = $ci2['nombre'];
-
-                                                                                echo "
-																										<option value='" . $id_empleado . "'>" . $nombre . "</option>
-																										";
-                                                                            };
-                                                                            ?>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                            <label>Confirmar No.Cita</label>
-                                                                            <select class="form-control"name="opcion_cita">
-                                                                                <?php
-                                                                                $ncita = $cit->mostrar_numero_cita_penditente2();
-                                                                                foreach ($ncita as $citid) {
-                                                                                    $id_cita2 = $citid['citNombre'];
-                                                                                    $id_cita1 = $citid['id_cita'];
-
-
-                                                                                    echo"    <option value = '" . $id_cita1 . "'>" . $id_cita2 . "</option>";
-                                                                                };
-                                                                                ?>
-                                                                            </select>
-                                                                        </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                                        <button type="submit" class="btn btn-primary" name="boton">Guardar Cambios</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-
-                                                        </div>
-                                                        <!-- /.modal-content -->
-                                                    </div>
-                                                    <!-- /.modal-dialog -->
-                                                </div>
-
-                                                <!-- /.modal -->
-                                                <!--</div>-->
-                                                <!-- .panel-body -->
-                                            </div>
-                                            <!-- /.panel -->
-                                        </div>
                                         <?php
                                         echo"
-										</td>
+										
 										</tr>";
                                     }
                                     ?>
@@ -895,9 +815,6 @@ function ConSoSinS($val, $sentence)
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-            
-            <!-- /#wrapper -->
-        </div>
             <!-- jQuery Version 1.11.0 -->
             <script src="js/jquery-1.11.0.js"></script>
 
@@ -906,25 +823,23 @@ function ConSoSinS($val, $sentence)
 
             <!-- Metis Menu Plugin JavaScript -->
             <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
-            
+
+            <!-- Custom Theme JavaScript -->
+            <script src="js/sb-admin-2.js"></script>
+
             <!-- DataTables JavaScript -->
             <script src="js/plugins/dataTables/jquery.dataTables.js"></script>
             <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
-           
-            <!-- Custom Theme JavaScript -->
-            <script src="js/sb-admin-2.js"></script>
-             <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-            <script>
-        $(document).ready(function() {
-            $('#dataTables-example').dataTable();
-        });
-                </script>
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').dataTable();
+    });
+    </script>
     
     </body>
     
 
-</html>
-
-<?php 
-   };
+</html
+<?php
+};
 ?>

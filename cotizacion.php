@@ -1,96 +1,40 @@
 <?php
 include('libreria/motor.php');
+
 require_once("clases/sesion.class.php");
-$cit=new cita();
-
-
-       
 //$login=new Login();
    $sesion = new Sesion();
    $usuario = $sesion->get("usuario");
    if( $usuario == false )  {
       header("Location: login.php");
    }  else  {
-	
-	if(isset($_POST['boton'])){
-	
-	$cod_emp=$_POST['opcion_emp'];
-        $cod_cita=$_POST['opcion_cita'];
-
-	
-	$resp_update= $cit->actualizar_cita($cod_emp,$cod_cita);}
-   
 
    
-
-$art=new articulo();
-$materiales=new materia();
-$emp=new empleado();
+   $cit=new cita();
+	$art=new articulo();
+	$materiales=new materia();
+	$emp=new empleado();
 	$cargo=$cit->sabercargo($usuario);
 	if ($cargo==1)
 	{
 		$mensaje1="Nuevos Pedidos";
-                $mensaje1_1="Ver citas pendientes";
 		$mensaje2="Total Asignadas";
 		$mensaje3="Nuevas Ordenes";
 		$mensaje4="Instalaciones";
-		$url1="modulo_ventas_supervisor.php";
-		$url2="citas_asignadas_vendedores.php";
 	}
 	else if($cargo==2)
 	{
-		$mensaje1="Nuevos Citas";
-                $mensaje1_2="Ver Citas sin asignar";
-		$mensaje2="Total Asignadas";
+		$mensaje1="Nuevos Pedidos";
+		$mensaje2="Asignadas";
 		$mensaje3="Nuevas Ordenes";
 		$mensaje4="Instalaciones";
-		$url1="modulo_ventas_supervisor.php";
-		$url2="citas_asignadas_vendedores.php";
-                $urlasig2_1="index.php";
-                $urlasig2_2="modulo_ventas_supervisor.php";
-                $urlasig2_3="citas_asginadas_vendedores.php";
-                $urlasig2_4="citas_canceladas.php";
-                $envio="Cita";
-                $envio2_2="Citas Sin asignar";
-                $envio2_3="Citas Asignadas";
-                $envio2_4="Citas canceladas";
 	}else if($cargo==3){
 		$mensaje1="Citas Pendientes";
-                $mensaje1_3="Ver Citas";
 		$mensaje2="Citas Confirmadas";
 		$mensaje3="Cotizacion Pendientes";
 		$mensaje4="Recibos Provicionales";
-		$url1="Modulo_Ventas/modulo_ventas.php";
-		$url2="confirmar_cita.php";
-                $urlasig="index.php";
-                $envio="Cita";
-                $urlasig2="crear_cita_local.php";
-                $urlasig3="confirmar_cita.php";
-                $urlasig4="cancelar_cita.php";
-                $urlasig5="index.php";
-                $urlasig6="modulo_ventas.php";
-                $urlasig7="consultar_cotizacion.php";
-                $urlasig8="consultar_recibo_provisional.php";
-                $urlasig9="consultar_orden_trabajo.php";
-                $urlasig10="index.php";
-                $urlasig11="crear_cotizacion.php";
-                $urlasig12="crear_recibo_provisional.php";
-                $urlasig13="crear_factura.php";
-                $envio2="Crear Cita";
-                $envio3="Confrmar Cita";
-                $envio4="Cancelar Cita";
-                $envio5="Consultas";
-                $envio6="Citas Asginadas";
-                $envio7="Cotizacion";
-                $envio8="Recibo Provisional";
-                $envio9="Orden de Trabajo";
-                $envio10="Procesos";
-                $envio11="Crear Cotizacion";
-                $envio12="Crear Recibo Provisional";
-                $envio13="Crear Factura";
 	
 	}
-
 	
 function fechainteligente($timestamp) 
 {
@@ -103,9 +47,9 @@ function fechainteligente($timestamp)
 	else if ($diff < 60) return "hace ".ConSoSinS(floor($diff), ' segundo(s)');
 	else if ($diff < 60*60) return "hace ".ConSoSinS(floor($diff/60), ' minuto(s)');
 	else if ($diff < 60*60*24) return "hace ".ConSoSinS(floor($diff/(60*60)), ' hora(s)');
-	else if ($diff < 60*60*24*30) return "hace ".ConSoSinS(floor($diff/(60*60*24)), ' día(s)');
+	else if ($diff < 60*60*24*30) return "hace ".ConSoSinS(floor($diff/(60*60*24)), ' d�a(s)');
 	else if ($diff < 60*60*24*30*12) return "hace ".ConSoSinS(floor($diff/(60*60*24*30)), ' mes(es)');
-	else return "hace ".ConSoSinS(floor($diff/(60*60*24*30*12)), ' año(s)');
+	else return "hace ".ConSoSinS(floor($diff/(60*60*24*30*12)), ' a�o(s)');
 }
 
 
@@ -113,51 +57,72 @@ function ConSoSinS($val, $sentence)
 {
 	if ($val > 1) return $val.str_replace(array('(s)','(es)'),array('s','es'), $sentence); 
 	else return $val.str_replace('(s)', '', $sentence);
-} 
+}
+// Captura la cita
+/********************************************************************/
+//cotizacion4.php?id_cita=2&&id_cotizacion=1
+$id_cita=$_GET['id'];
 
+	$info=$cit->mostrar_byid($id_cita);
+	foreach($info as $ci){
+	$id_cita = $ci['id_cita'];
+	$nombre=$ci['nombre'];
+	$apellido=$ci['apellido'];
+	$telefono=$ci['telefono'];
+	$direccion=$ci['direccion'];
+	$coment=$ci['comentario'];
+	}
+	
 
-
-
+/********************************************************************/
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
+<head>
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <title>Modulo Ventas</title>
+    <title>Sistema de Administracion</title>
 
-        <!-- Bootstrap Core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-        <!-- MetisMenu CSS -->
-        <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <!-- MetisMenu CSS -->
+    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
 
-        <!-- Custom CSS -->
-        <link href="css/sb-admin-2.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="css/plugins/dataTables.bootstrap.css" rel="stylesheet">
+	
+	<!-- Edit Table CCSS -->
+	<link href="js/edit_table/editablegrid.css" rel="stylesheet">
 
-        <!-- Custom Fonts -->
-        <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+    <!-- Custom Fonts -->
+    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    </head>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-    <body>
+</head>
 
-        <div id="wrapper">
+<body>
+
+    <div id="wrapper">
+
+         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
+             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -371,7 +336,7 @@ function ConSoSinS($val, $sentence)
                     <ul class="nav" id="side-menu">
 
                         <li>
-                            <a class="active" href="modulo_ventas_supervisor.php"><i class="fa fa-dashboard fa-fw"></i> Panel de Control</a>
+                            <a class="active" href="index.php"><i class="fa fa-dashboard fa-fw"></i> Panel de Control</a>
                         </li>
                         <li>
                             <a href="index.php"><i class="fa fa-bar-chart-o fa-fw"></i> Ventas<span class="fa arrow"></span></a>
@@ -592,7 +557,7 @@ function ConSoSinS($val, $sentence)
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li><a href="/Alfinte/logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+						 <li><a href="/Alfinte/logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -601,330 +566,399 @@ function ConSoSinS($val, $sentence)
             <!-- /.navbar-static-side -->
         </nav>
 
-            <!-- Page Content -->
-            <div id="page-wrapper">
+        <div id="page-wrapper">
             <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Panel de control</h1>
+                <div class="col-lg-10">
+                    <h1 class="page-header">Cotizacion</h1>
                 </div>
-                <!-- /.col-lg-12 -->
+                <!-- /.col-lg-10 -->
             </div>
             <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-comments fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-									<?php
-										if ($cargo==1)
-											{
-											$rcate=$cit->cantidad_citas_user($usuario);
-											}
-											else if($cargo==2)
-											{
-												$rcate=$cit->cantidad_citas_user($usuario);
-											}else if($cargo==3){
-												$rcate=$cit->cantidad_cita_pendiente($usuario);
-											};
-											foreach($rcate as $ci){
-											$numero=$ci['numeroCita'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numero; ?></div>
-                                    <div><?php echo $mensaje1;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="<?php echo $url1; ?>">
-                            <div class="panel-footer">
-                                <?php
-										if ($cargo==1)
-											{
-											$mensaje_mostar=$mensaje1_1;
-											}
-											else if($cargo==2)
-											{
-												$mensaje_mostar=$mensaje1_2;
-											};
-									?>
-                                <span class="pull-left"><?php echo $mensaje_mostar; ?></span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-tasks fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-								<?php
-										if ($cargo==1)
-											{
-											$rcate=$cit->cantidad_cita_asignada();
-											}
-											else if($cargo==2)
-											{
-												$rcate=$cit->cantidad_cita_asignada();	
-											}else if($cargo==3){
-												$rcate=$cit->cantidad_cita_confirmada($usuario);
-											};
-										
-											foreach($rcate as $ci){
-											$numero=$ci['numeroAsi'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numero; ?></div>
-                                    <div><?php echo $mensaje2;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href='<?php echo $url2; ?>'>
-                            <div class="panel-footer">
-                                <span class="pull-left">Ver Asignaciones</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-shopping-cart fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-								<?php	if ($cargo==1)
-											{
-											$rcate=$cit->cantidad_or();
-											}
-											else if($cargo==2)
-											{
-												$rcate=$cit->cantidad_or();	
-											}else if($cargo==3){
-												$rcate=$cit->cantidad_cita_confirmada($usuario);
-											};
-										
-										$rcate=$cit->cantidad_or_user($usuario);
-											foreach($rcate as $ci){
-											$numeroO=$ci['numeroOr'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numeroO; ?></div>
-                                    <div><?php echo $mensaje3;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">Ver Detalles</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-support fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-								<?php
-										$rcate=$cit->cantidad_ins();
-											foreach($rcate as $ci){
-											$numeroi=$ci['numeroIns'];
-											//echo"<div class='huge'>{$ci['numeroCita']}<div>";
-											};
-									?>
-                                    <div class="huge"><?php echo $numeroi; ?></div>
-                                    <!--<div class="huge">13</div>-->
-                                    <div><?php echo $mensaje4;?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">Ver Detalles</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>	
+			<div class="row">
+				<form role="form">
+					<div class="col-lg-8">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								Panel de Cotizacion
+							</div>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Muestra el listado de las citas mas recientes
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>Cita</th>
-                                            <th>Fecha</th>
-                                            <th>Nombre</th>
-                                            <th>Telefono</th>
-                                            <th>Direccion</th>
-                                            <th>Email</th>
-                                            <th>Canal</th>
-                                            <th>Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $rcitas = $cit->mostrar_supervisor();
-                                        foreach ($rcitas as $ci) {
-                                            echo "
-										<tr>
-											<td>{$ci['id_cita']}</td>
-											<td>{$ci['fecha_creacion']}</td>
-											<td>{$ci['nombre']}</td>
-											<td>{$ci['telefono']}</td>
-											<td>{$ci['direccion']}</td>
-											<td>{$ci['email']}</td>
-											<td>{$ci['descripcion']}</td>
-											<td>"
-                                            ?>
-                                        <div class="col-lg-6">
-                                            <div class="panel panel-default">
-                                                <!-- /.panel-heading -->
-                                                <!--<div class="panel-body">-->
-                                                <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"  >
-                                                    Asignar
-
-                                                </button>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                                <h5 class="modal-title" id="myModalLabel">Formulario para Asignr Vendedor</h5>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form role="form" action="citas_asignadas_vendedores.php" method="POST">
-                                                                <!--<input type='hidden'  name='numerocitas'><?//php echo $ci['id_cita'] ?></input>-->
-                                                                    <div class="form-group">
-                                                                        <label>Asignar a:</label>
-                                                                        <select class="form-control" name="opcion_emp">
-                                                                            <?php
-                                                                            $reemp = $emp->mostrar();
-                                                                            foreach ($reemp as $ci2) {
-                                                                                $id_empleado = $ci2['id_empleado'];
-                                                                                $nombre = $ci2['nombre'];
-
-                                                                                echo "
-																										<option value='" . $id_empleado . "'>" . $nombre . "</option>
-																										";
-                                                                            };
-                                                                            ?>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                            <label>Confirmar No.Cita</label>
-                                                                            <select class="form-control"name="opcion_cita">
-                                                                                <?php
-                                                                                $ncita = $cit->mostrar_numero_cita_penditente2();
-                                                                                foreach ($ncita as $citid) {
-                                                                                    $id_cita2 = $citid['citNombre'];
-                                                                                    $id_cita1 = $citid['id_cita'];
-
-
-                                                                                    echo"    <option value = '" . $id_cita1 . "'>" . $id_cita2 . "</option>";
-                                                                                };
-                                                                                ?>
-                                                                            </select>
-                                                                        </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                                        <button type="submit" class="btn btn-primary" name="boton">Guardar Cambios</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-
-                                                        </div>
-                                                        <!-- /.modal-content -->
-                                                    </div>
-                                                    <!-- /.modal-dialog -->
-                                                </div>
-
-                                                <!-- /.modal -->
-                                                <!--</div>-->
-                                                <!-- .panel-body -->
-                                            </div>
-                                            <!-- /.panel -->
+							<div class="panel-body">
+							
+							    <ul class="nav nav-pills">
+									<li class="active"><a href="#home-pills" data-toggle="tab">Informacion Cliente</a>
+									</li>
+									<li><a href="#profile-pills" data-toggle="tab">Informacion Cotizacion</a>
+									</li>
+									
+								</ul>
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div class="tab-pane fade in active" id="home-pills">
+										<p>
+										<div class="col-xs-6">
+											<div class="form-group">
+											<input class="form-control" id="id_cita" value=<?php echo $id_cita; ?> type="hidden" disabled>
+												<label>Nombre</label>
+													<input class="form-control" id="nombre" value=<?php echo $nombre; ?> disabled >
+											</div>
+											<div class="form-group">
+												<label>Telefono</label>
+													<input class="form-control" id="telefono" value=<?php echo $telefono;?> disabled>
+											</div>
+											
+										</div>
+										<div class="col-xs-6">
+                                                                                                <div class="form-group">
+													<label>Apellido</label>
+                                                                                                        <input class="form-control" id="apellido" value=<?php echo $apellido; ?> disabled>
+												</div>
+												<div class="form-group">
+													<label>Direccion</label>
+													<input class="form-control" id="direccion" value=<?php echo $direccion; ?> disabled>
+												</div>
+											</div>
+											<div class="col-lg-8">
+												<div class="form-group">
+													<label>Comentarios</label>
+													<textarea class="form-control" rows="2" id="coment" disabled ><?php echo $coment; ?></textarea>
+												</div>
+											</div>
+									</div>
+									<div class="tab-pane fade" id="profile-pills">
+										<div class="col-xs-5">
+											<div class="form-group">
+												<label>Dias de Validez</label>
+													<select class="form-control" id="diaval">
+														<option value="5">5</option>
+														<option value="10">10</option>
+														<option value="15">15</option>
+														<option value="30">30</option>
+													</select>
+											</div>
+											<div class="form-group">
+													<label>Porcentaje de Anticipo</label>
+													<input class="form-control" id="porcentaje_an" >
+											</div>
+										</div>
+										<div class="col-xs-5">
+											<div class="form-group">
+												<label>Tiempo de Entrega</label>
+													<select class="form-control" id="timeen">
+														<option value="5">5</option>
+														<option value="10">10</option>
+														<option value="15">15</option>
+														<option value="30">30</option>
+													</select>
+											</div>
+											<div class="form-group">
+													<label>Porcentaje de Descuento</label>
+													<input class="form-control" id="porcentaje_des" >
+											</div>
+										</div>
+																				
+										<div class="col-lg-8">
+												<div class="form-group">
+													<label>Resumen</label>
+													<textarea class="form-control" rows="2" id="comment2"></textarea>
+												</div>
+										</div>
+									</div>
+								</div>
+                            </div>
+						</div>
+					</div>
+                                    
+				</div>
+					
+					
+					
+					
+				</form>
+                            <div class="col-lg-10">
+						<div class="panel panel-yellow">
+								<div class="panel-heading">
+									Cotizacion
+								</div>
+								<div class="panel-body">
+									<div class="col-xs-4">
+										<div class="form-group">
+                                            <label>Categoria</label>
+											<select class="form-control" onchange="load(this.value)">
+												<option value="">Seleccione</option>
+											<?php  $categoria=$art->mostrar_categoria();
+													foreach($categoria as $cat){
+													echo "
+															<option value='".$cat['id_categoria']."'>".$cat['descripcion']."</option>";
+															};
+											?>
+                                            </select>
                                         </div>
-                                        <?php
-                                        echo"
-										</td>
-										</tr>";
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.table-responsive -->
+									</div>
 
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            
-            <!-- /#wrapper -->
-        </div>
-            <!-- jQuery Version 1.11.0 -->
-            <script src="js/jquery-1.11.0.js"></script>
+									<div class="col-xs-4">
+										<div class="form-group">
+											 <input class="form-control" placeholder="Enter text" type="text" id="articulo_nombre" onkeyup="loadXMLDoc()" >
+										</div>
+										<!-- Aqui esta el DIV en el cual se va a cargar la pagina de cotizacion_articulo-->
+										<div id="myDiv"></div>
+											<p></p>
+											<button  id="btnagregar" type="submit" class="btn btn-primary">Agregar </button>
+                                     </div>
+									
+									<div class="col-lg-12">
+										<div class="panel-body">
+											<!-- aqui va la tabla creada con js -->
+											<div id="tablecontent"></div>
+										</div>
+									</div>
+									<div class="col-lg-12">
+									<input type="button" href="javascript:;" onclick="guardarTodo();" value="Guardar" class="btn btn-primary"/>
+									<br>
+									<span id="resultado"></span>
+									</div>
+										
+								</div>
+						</div>
+						<!-- /.col-lg-4 -->
+						
+					</div>
+			</div>
 
-            <!-- Bootstrap Core JavaScript -->
-            <script src="js/bootstrap.min.js"></script>
+		</div>
+        <!-- /#page-wrapper -->
 
-            <!-- Metis Menu Plugin JavaScript -->
-            <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
-            
-            <!-- DataTables JavaScript -->
-            <script src="js/plugins/dataTables/jquery.dataTables.js"></script>
-            <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
-           
-            <!-- Custom Theme JavaScript -->
-            <script src="js/sb-admin-2.js"></script>
-             <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-            <script>
-        $(document).ready(function() {
-            $('#dataTables-example').dataTable();
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery Version 1.11.0 -->
+    <script src="js/jquery-1.11.0.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/sb-admin-2.js"></script>
+	
+	<!-- Ajax Customizado"-->
+	<script src="js/ajax.js"></script>
+	
+	<script src="js/edit_table/editablegrid.js"></script>
+	<script src="js/edit_table/editablegrid_charts.js"></script>
+	<script src="js/edit_table/editablegrid_renderers.js"></script>
+	<script src="js/edit_table/editablegrid_editors.js"></script>
+	<script src="js/edit_table/editablegrid_utils.js"></script>
+	<script src="js/edit_table/editablegrid_validators.js"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+	var $myDiv, $btnAgregar;
+	var editableGrid; //variable con el editableGrid
+	
+	function agregarCotizacion(valorselec){
+		
+		$.ajax({
+			type: "GET",
+			url: "cotizacion_articulo.php",
+			data: { 'q' : valorselec, 'json': "1" },
+			success: function(data){
+				//console.log(data);
+				agregarTabla(data);
+			},
+			dataType: "json"
+		});
+
+	}
+
+	function agregarTabla(datonuevo){
+		var data = [];
+		
+		datagrid = editableGrid.data;
+		for(i = 0; i < datagrid.length; i++){ //obtener antes los valores del editable grid.
+			fila =  datagrid[i];
+			jfila = { "id": fila.columns[0], "values": {
+				"id_articulo": fila.columns[0],
+				"descripcion": fila.columns[1],
+				"cantidad": fila.columns[2],
+				"ancho": fila.columns[3],
+				"largo": fila.columns[4],
+				"alto": fila.columns[5],
+				"precio": fila.columns[6]
+				}
+			};
+			data.push(jfila);
+		}
+		
+		//console.log(fila);
+		//console.log(data.length);
+		
+		nuevafila = { "id": datonuevo.id_articulo, "values": {
+				"id_articulo": datonuevo.id_articulo,
+				"descripcion": datonuevo.descripcion,
+				"cantidad": 1,
+				"ancho": 0,				
+				"largo": 0,
+				"alto": 0,
+				"precio": datonuevo.precio
+			}
+		};
+		
+		data.push(nuevafila);
+		
+		//console.log(data);
+		//editableGrid.data = data;
+		editableGrid.load({"metadata": getMetaTable(), "data": data});
+		editableGrid.renderGrid("tablecontent", "table table-hover table-bordered table-condensed");
+	}
+	
+	function guardarTodo(){
+	var data = [];
+		
+		datagrid = editableGrid.data;
+		for(i = 0; i < datagrid.length; i++){ //obtener antes los valores del editable grid.
+			fila =  datagrid[i];
+			/*jfila = { "id": fila.columns[0], "values": {
+				"id_articulo": fila.columns[0],
+				"cantidad": fila.columns[1],
+				"ancho": fila.columns[2],
+				"largo": fila.columns[3],
+				"volumen": fila.columns[4],
+				"area": fila.columns[5],
+				"precio": fila.columns[6],
+				"total": fila.columns[7]
+				}*/
+				//alert(fila.columns[0]);
+				guardarDetalle(fila.columns[0],fila.columns[2],fila.columns[3],fila.columns[4],fila.columns[5],fila.columns[6]);
+			};
+			//data.push(jfila);
+			
+		guardarEncabezado();
+	
+	}
+	
+	function guardarEncabezado(){
+	//llamada a un ajax que son los valores fijos 
+	nombre= $('#nombre').val();
+	telefono=$('#telefono').val();
+	apellido=$('#apellido').val();
+	direccion=$('#direccion').val();
+	coment=$('#coment').val();
+	diaval=$('#diaval').val();
+	timeen=$('#timeen').val();
+	comment2=$('#comment2').val();
+	id_cita=$('#id_cita').val();
+	porcentaje_an=$('#porcentaje_an').val();
+	porcentaje_des=$('#porcentaje_des').val();
+	//alert(nombre);
+		
+		var parametros = {
+                "nombre" :   nombre,
+                "apellido" : apellido,
+				"telefono" : telefono,
+				"direccion": direccion,
+				"coment":   coment,
+				"diaval":	diaval,
+				"timeen":	timeen,
+				"comment2": comment2,
+				"id_cita": id_cita,
+				"porcentaje_an": porcentaje_an,
+				"porcentaje_des": porcentaje_des
+				
+        };
+        $.ajax({
+                data:  parametros,
+                url:   'insertar_encabezado.php',
+                type:  'post',
+                beforeSend: function () {
+                        $("#resultado").html("Procesando, espere por favor...");
+                },
+                success:  function (response) {
+                        $("#resultado").html(response);
+						alert("Ingresado Correctamente");
+                },
+				error: function(response){
+					alert("error");
+				}
         });
-                </script>
-    
-    </body>
-    
+	
+	}
+	
+	function guardarDetalle(id_articulo,cantidad,ancho,largo,alto,precio){
+	//alert(id_articulo,cantidad,ancho,largo,volumen,area,precio,total);
+	var parametros = {
+                "id_articulo" : id_articulo,
+                "cantidad" : cantidad,
+				"ancho" : ancho,
+				"largo" : largo,
+				"alto"	: alto,
+				"precio" : precio
+			
+				
+        };
+        $.ajax({
+                data:  parametros,
+                url:   'insertar_detalle.php',
+                type:  'post',
+                beforeSend: function () {
+                        $("#resultado").html("Procesando, espere por favor...");
+                },
+                success:  function (response) {
+                        $("#resultado").html(response);
+                }
+        });
+
+	
+	}
+	
+	
+	function getMetaTable(){
+		var metadata = [];
+        metadata.push({name: "id_articulo", label: "Cod. Articulo", datatype: "integer", editable: false});
+        metadata.push({name: "descripcion", label: "Articulos", datatype: "string", editable: false});
+        metadata.push({name: "cantidad", label: "Cantidad", datatype: "integer", editable: true});
+		metadata.push({name: "ancho", label: "Ancho", datatype: "double", editable: true});
+		metadata.push({name: "largo", label: "Largo", datatype: "double", editable: true});
+		metadata.push({name: "alto", label: "Alto", datatype: "double", editable: true});
+		metadata.push({name: "precio", label: "Precio", datatype: "double", editable: false});
+		return metadata;
+	}
+	
+	function crearTabla() {
+        editableGrid = new EditableGrid("Tabla");
+        editableGrid.load({"metadata": getMetaTable(), "data": []});
+        editableGrid.renderGrid("tablecontent", "table table-hover table-bordered table-condensed");
+    }
+	
+    $(document).ready(function() {
+        $('#dataTables-example').dataTable();
+		
+		$btnAgregar = $("button#btnagregar");
+		$myDiv = $("div#myDiv");
+		
+		crearTabla();
+		
+		$btnAgregar.click(function(){
+			//alert("esta es una alerta de prueba");
+			valorselec = $myDiv.find("select option:selected").val();
+			if(valorselec == undefined) return false;
+			
+			agregarCotizacion(valorselec);
+			
+			//alert(valorselec);
+			return false;
+		});
+    });
+    </script>
+
+</body>
 
 </html>
-
-<?php 
-   };
+<?php
+};
 ?>

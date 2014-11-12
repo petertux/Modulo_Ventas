@@ -4,21 +4,15 @@ require_once("clases/sesion.class.php");
 $cit=new cita();
 
 
-       
+	
+
 //$login=new Login();
    $sesion = new Sesion();
    $usuario = $sesion->get("usuario");
    if( $usuario == false )  {
       header("Location: login.php");
    }  else  {
-	
-	if(isset($_POST['boton'])){
-	
-	$cod_emp=$_POST['opcion_emp'];
-        $cod_cita=$_POST['opcion_cita'];
-
-	
-	$resp_update= $cit->actualizar_cita($cod_emp,$cod_cita);}
+ 
    
 
    
@@ -30,67 +24,23 @@ $emp=new empleado();
 	if ($cargo==1)
 	{
 		$mensaje1="Nuevos Pedidos";
-                $mensaje1_1="Ver citas pendientes";
 		$mensaje2="Total Asignadas";
 		$mensaje3="Nuevas Ordenes";
 		$mensaje4="Instalaciones";
-		$url1="modulo_ventas_supervisor.php";
-		$url2="citas_asignadas_vendedores.php";
 	}
 	else if($cargo==2)
 	{
-		$mensaje1="Nuevos Citas";
-                $mensaje1_2="Ver Citas sin asignar";
-		$mensaje2="Total Asignadas";
+		$mensaje1="Nuevos Pedidos";
+		$mensaje2="Asignadas";
 		$mensaje3="Nuevas Ordenes";
 		$mensaje4="Instalaciones";
-		$url1="modulo_ventas_supervisor.php";
-		$url2="citas_asignadas_vendedores.php";
-                $urlasig2_1="index.php";
-                $urlasig2_2="modulo_ventas_supervisor.php";
-                $urlasig2_3="citas_asginadas_vendedores.php";
-                $urlasig2_4="citas_canceladas.php";
-                $envio="Cita";
-                $envio2_2="Citas Sin asignar";
-                $envio2_3="Citas Asignadas";
-                $envio2_4="Citas canceladas";
 	}else if($cargo==3){
 		$mensaje1="Citas Pendientes";
-                $mensaje1_3="Ver Citas";
 		$mensaje2="Citas Confirmadas";
 		$mensaje3="Cotizacion Pendientes";
 		$mensaje4="Recibos Provicionales";
-		$url1="Modulo_Ventas/modulo_ventas.php";
-		$url2="confirmar_cita.php";
-                $urlasig="index.php";
-                $envio="Cita";
-                $urlasig2="crear_cita_local.php";
-                $urlasig3="confirmar_cita.php";
-                $urlasig4="cancelar_cita.php";
-                $urlasig5="index.php";
-                $urlasig6="modulo_ventas.php";
-                $urlasig7="consultar_cotizacion.php";
-                $urlasig8="consultar_recibo_provisional.php";
-                $urlasig9="consultar_orden_trabajo.php";
-                $urlasig10="index.php";
-                $urlasig11="crear_cotizacion.php";
-                $urlasig12="crear_recibo_provisional.php";
-                $urlasig13="crear_factura.php";
-                $envio2="Crear Cita";
-                $envio3="Confrmar Cita";
-                $envio4="Cancelar Cita";
-                $envio5="Consultas";
-                $envio6="Citas Asginadas";
-                $envio7="Cotizacion";
-                $envio8="Recibo Provisional";
-                $envio9="Orden de Trabajo";
-                $envio10="Procesos";
-                $envio11="Crear Cotizacion";
-                $envio12="Crear Recibo Provisional";
-                $envio13="Crear Factura";
 	
 	}
-
 	
 function fechainteligente($timestamp) 
 {
@@ -357,7 +307,7 @@ function ConSoSinS($val, $sentence)
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="/Alfinte/logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -371,115 +321,32 @@ function ConSoSinS($val, $sentence)
                     <ul class="nav" id="side-menu">
 
                         <li>
-                            <a class="active" href="modulo_ventas_supervisor.php"><i class="fa fa-dashboard fa-fw"></i> Panel de Control</a>
+                            <a class="active" href="index.php"><i class="fa fa-dashboard fa-fw"></i> Panel de Control</a>
                         </li>
                         <li>
                             <a href="index.php"><i class="fa fa-bar-chart-o fa-fw"></i> Ventas<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                <li>
-                                   <?php
-										if ($cargo==1)
-											{
-											$url_asignada=$urlasig;
-                                                                                        $ir_a=$envio;
-											}
-											else if($cargo==2)
-											{
-												$url_asignada=$urlasig2_1;
-                                                                                                $url_asignada2=$urlasig2_2;
-                                                                                                $url_asignada3=$urlasig2_3;
-                                                                                                $url_asignada4=$urlasig2_4;
-                                                                                                $ir_a=$envio;
-                                                                                                $ir_a2=$envio2_2;
-                                                                                                $ir_a3=$envio2_3;
-                                                                                                $ir_a4=$envio2_4;
-                                                                                                echo"<a href='".$url_asignada."'>".$ir_a."<span class='fa arrow'></span></a> 
-                                                                                            <ul class='nav nav-third-level'>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada2."'>".$ir_a2."</a>
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada3."'>".$ir_a3."</a>
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada4."'>".$ir_a4."</a>
-                                                                                                </li>
-                                                                                                </ul>
-                                                                                               </li>";
-											}
-                                                                                        else if($cargo==3){
-                                                                                            $url_asignada=$urlasig;
-                                                                                            $ir_a=$envio;
-                                                                                            $url_asignada2=$urlasig2;
-                                                                                            $url_asignada3=$urlasig3;
-                                                                                            $url_asignada4=$urlasig4;
-                                                                                            $url_asignada5=$urlasig5;
-                                                                                            $url_asignada6=$urlasig6;
-                                                                                            $url_asignada7=$urlasig7;
-                                                                                            $url_asignada8=$urlasig8;
-                                                                                            $url_asignada9=$urlasig9;
-                                                                                            $url_asignada10=$urlasig10;
-                                                                                            $url_asignada11=$urlasig11;
-                                                                                            $url_asignada12=$urlasig12;
-                                                                                            $url_asignada13=$urlasig13;
-                                                                                            $ir_a2=$envio2;
-                                                                                            $ir_a3=$envio3;
-                                                                                            $ir_a4=$envio4;
-                                                                                            $ir_a5=$envio5;
-                                                                                            $ir_a6=$envio6;
-                                                                                            $ir_a7=$envio7;
-                                                                                            $ir_a8=$envio8;
-                                                                                            $ir_a9=$envio9;
-                                                                                            $ir_a10=$envio10;
-                                                                                            $ir_a11=$envio11;
-                                                                                            $ir_a12=$envio12;
-                                                                                            $ir_a13=$envio13;
-                                                                                            echo"<a href='".$url_asignada."'>".$ir_a."<span class='fa arrow'></span></a> 
-                                                                                            <ul class='nav nav-third-level'>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada2."'>".$ir_a2."</a>
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada3."'>".$ir_a3."</a>
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    <a href='".$url_asignada4."'>".$ir_a4."</a>
-                                                                                                </li>
-                                                                                            </ul>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a href='".$url_asignada5."'>".$ir_a5."<span class='fa arrow'></span></a> 
-                                                                                                <ul class='nav nav-third-level'>
-                                                                                                    <li>
-                                                                                                        <a href='".$url_asignada6."'>".$ir_a6."</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href='".$url_asignada7."'>".$ir_a7."</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href='".$url_asignada8."'>".$ir_a8."</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href='".$url_asignada9."'>".$ir_a9."</a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <a href='".$url_asignada10."'>".$ir_a10."<span class='fa arrow'></span></a> 
-                                                                                                <ul class='nav nav-third-level'>
-                                                                                                    <li>
-                                                                                                        <a href='".$url_asignada11."'>".$ir_a11."</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href='".$url_asignada12."'>".$ir_a12."</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href='".$url_asignada13."'>".$ir_a13."</a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </li>";
-                                                                                        }
-									?>
+                                    <a href="index.php">Cita <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="ver_categoria.php">Crear Cita</a>
+                                        </li>
+                                        <li>
+                                            <a href="ver_categoria.php">Confirmar Cita</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+								<li>
+                                    <a href="ver_cita.php">Asignaciones</a>
+                                </li>
+								<li>
+                                    <a href="cotizacion.php">Cotizaciones</a>
+                                </li>
+                                <li>
+                                    <a href="facturas.php">Facturas</a>
+                                </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -592,7 +459,7 @@ function ConSoSinS($val, $sentence)
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li><a href="/Alfinte/logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+						 <li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -640,19 +507,9 @@ function ConSoSinS($val, $sentence)
                                 </div>
                             </div>
                         </div>
-                        <a href="<?php echo $url1; ?>">
+                        <a href="ver_cita.php">
                             <div class="panel-footer">
-                                <?php
-										if ($cargo==1)
-											{
-											$mensaje_mostar=$mensaje1_1;
-											}
-											else if($cargo==2)
-											{
-												$mensaje_mostar=$mensaje1_2;
-											};
-									?>
-                                <span class="pull-left"><?php echo $mensaje_mostar; ?></span>
+                                <span class="pull-left">Ver Citas Pendientes</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
@@ -689,7 +546,7 @@ function ConSoSinS($val, $sentence)
                                 </div>
                             </div>
                         </div>
-                        <a href='<?php echo $url2; ?>'>
+                        <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left">Ver Asignaciones</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -788,12 +645,13 @@ function ConSoSinS($val, $sentence)
                                             <th>Direccion</th>
                                             <th>Email</th>
                                             <th>Canal</th>
-                                            <th>Editar</th>
+                                            <th>Estado</th>
+                                            <th>Comentario</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $rcitas = $cit->mostrar_supervisor();
+                                        $rcitas = $cit->mostrar_cita_asgi_vend($usuario);
                                         foreach ($rcitas as $ci) {
                                             echo "
 										<tr>
@@ -804,79 +662,11 @@ function ConSoSinS($val, $sentence)
 											<td>{$ci['direccion']}</td>
 											<td>{$ci['email']}</td>
 											<td>{$ci['descripcion']}</td>
+                                                                                        <td>{$ci['valor']}</td>
+                                                                                        <td>{$ci['comentario']}</td>
 											<td>"
                                             ?>
-                                        <div class="col-lg-6">
-                                            <div class="panel panel-default">
-                                                <!-- /.panel-heading -->
-                                                <!--<div class="panel-body">-->
-                                                <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"  >
-                                                    Asignar
 
-                                                </button>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                                <h5 class="modal-title" id="myModalLabel">Formulario para Asignr Vendedor</h5>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form role="form" action="citas_asignadas_vendedores.php" method="POST">
-                                                                <!--<input type='hidden'  name='numerocitas'><?//php echo $ci['id_cita'] ?></input>-->
-                                                                    <div class="form-group">
-                                                                        <label>Asignar a:</label>
-                                                                        <select class="form-control" name="opcion_emp">
-                                                                            <?php
-                                                                            $reemp = $emp->mostrar();
-                                                                            foreach ($reemp as $ci2) {
-                                                                                $id_empleado = $ci2['id_empleado'];
-                                                                                $nombre = $ci2['nombre'];
-
-                                                                                echo "
-																										<option value='" . $id_empleado . "'>" . $nombre . "</option>
-																										";
-                                                                            };
-                                                                            ?>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                            <label>Confirmar No.Cita</label>
-                                                                            <select class="form-control"name="opcion_cita">
-                                                                                <?php
-                                                                                $ncita = $cit->mostrar_numero_cita_penditente2();
-                                                                                foreach ($ncita as $citid) {
-                                                                                    $id_cita2 = $citid['citNombre'];
-                                                                                    $id_cita1 = $citid['id_cita'];
-
-
-                                                                                    echo"    <option value = '" . $id_cita1 . "'>" . $id_cita2 . "</option>";
-                                                                                };
-                                                                                ?>
-                                                                            </select>
-                                                                        </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                                        <button type="submit" class="btn btn-primary" name="boton">Guardar Cambios</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-
-                                                        </div>
-                                                        <!-- /.modal-content -->
-                                                    </div>
-                                                    <!-- /.modal-dialog -->
-                                                </div>
-
-                                                <!-- /.modal -->
-                                                <!--</div>-->
-                                                <!-- .panel-body -->
-                                            </div>
-                                            <!-- /.panel -->
-                                        </div>
                                         <?php
                                         echo"
 										</td>
@@ -906,19 +696,18 @@ function ConSoSinS($val, $sentence)
 
             <!-- Metis Menu Plugin JavaScript -->
             <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
-            
+
+            <!-- Custom Theme JavaScript -->
+            <script src="js/sb-admin-2.js"></script>
+
             <!-- DataTables JavaScript -->
             <script src="js/plugins/dataTables/jquery.dataTables.js"></script>
             <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
-           
-            <!-- Custom Theme JavaScript -->
-            <script src="js/sb-admin-2.js"></script>
-             <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-            <script>
-        $(document).ready(function() {
-            $('#dataTables-example').dataTable();
-        });
-                </script>
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').dataTable();
+    });
+    </script>
     
     </body>
     
@@ -928,3 +717,4 @@ function ConSoSinS($val, $sentence)
 <?php 
    };
 ?>
+
