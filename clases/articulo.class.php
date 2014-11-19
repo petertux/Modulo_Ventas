@@ -20,9 +20,21 @@
     public $largo;
     public $area;
 	public $volumen;
+	/**********************Cotizacion**********************************/
     public $id_cotizacion;
-
-
+	public $resumen;
+	public $monto_descuento;
+	public $subtotal;
+	public $porcentaje_anticipo;
+	public $dia_validez;
+	public $porcentaje_descuento;
+	public $id_tiempo_entrega;
+	public $id_cotizacion_estado;
+	public $id_cita;
+	public $fecha_desde_antes;
+	public $fecha_hasta_antes;
+	/**********************Cotizacion**********************************/
+	
      public function agregar(){
     $query="INSERT INTO articulo_ter VALUES ('{$this->id_articulo}',
                                         '{$this->descripcion}',
@@ -55,7 +67,7 @@
         $num = trim($row[0]);}
          $num = (int)$num+1;
       $query= "UPDATE seqnos set siguiente='".$num."'where tabla='".$tabla."'";
-        echo $query;
+	 // echo $query;
         $resultado = mysql_query($query) or die ("Problema con query");
            return $resultado;
 		}
@@ -78,6 +90,10 @@
         }
              return $array;
         }
+		
+		
+		
+		
 		
 		public function mostrar2($id){
         $query="SELECT `id_articulo`,
@@ -117,16 +133,36 @@
              return $array;
         }
 		
-		public function mostrar_articulo_media($id){
-        $query="SELECT `id_articulo`,
-						`articulo_ter`.`descripcion`,
-						`min_stock`,
-						`articulo_ter`.`estado`,
-						`cant_per_unit`,
-                        `imagen`
-						FROM `articulo_ter`,`articulo_cat`
-						where  `articulo_ter`.`id_categoria` =`articulo_cat`.`id_categoria`
+		public function mostrar_articulo2($id){
+        $query="SELECT `articulo_ter`.`id_articulo` ,
+						`articulo_ter`.`descripcion`
+						FROM `articulo_ter` , `articulo_cat` , `articulo_pre`
+						WHERE `articulo_ter`.`id_categoria` = `articulo_cat`.`id_categoria`
+						AND `articulo_ter`.`id_articulo` = `articulo_pre`.`id_articulo`
+						AND `articulo_pre`.`estado` = 'A'
+						AND `articulo_ter`.`estado` = 'A'
 						AND `articulo_ter`.`id_categoria`=".$id." limit 10";
+						//INNER JOIN  `cita_estado` ON `cita`.id_estado = `cita_estado`.id_citaest limit 9";
+        $rs=mysql_query($query);
+        $array=array();
+        while($fila=mysql_fetch_assoc($rs)){
+          $array[]=$fila;
+        }
+             return $array;
+        }
+		
+		public function mostrar_articulo_media($id){
+        $query="SELECT `imagen` ,
+				`disponible_web` ,
+				`articulo_ter`.`descripcion` ,
+				`articulo_pre`.`precio` ,
+				`articulo_ter`.`id_articulo`
+				FROM `articulo_ter` , `articulo_pre` , `articulo_cat`
+				WHERE `articulo_ter`.`id_articulo` = `articulo_pre`.`id_articulo`
+				AND `articulo_ter`.`id_categoria` = `articulo_cat`.`id_categoria`
+				AND `articulo_ter`.`id_categoria`=".$id." 
+				AND articulo_pre.estado='A'
+				ORDER BY `articulo_ter`.`id_articulo` ASC limit 10";
 						//INNER JOIN  `cita_estado` ON `cita`.id_estado = `cita_estado`.id_citaest limit 9";
         $rs=mysql_query($query);
         $array=array();
@@ -152,15 +188,16 @@
         }
 		
         public function mostrar_imagen(){
-        $query="SELECT `imagen`,
-                `disponible_web`,
-                `articulo_ter`.`descripcion`,
-                `articulo_pre`.`precio`,
-                 `articulo_ter`.`id_articulo`
-                FROM `articulo_ter` ,`articulo_pre`,`articulo_cat`
-                where `articulo_ter`.`id_articulo` =`articulo_pre`.`id_articulo`
-                and `articulo_ter`.`id_categoria`=`articulo_cat`.`id_categoria`
-				limit 10;";
+        $query="SELECT `imagen` ,
+				`disponible_web` ,
+				`articulo_ter`.`descripcion` ,
+				`articulo_pre`.`precio` ,
+				`articulo_ter`.`id_articulo`
+				FROM `articulo_ter` , `articulo_pre` , `articulo_cat`
+				WHERE `articulo_ter`.`id_articulo` = `articulo_pre`.`id_articulo`
+				AND `articulo_ter`.`id_categoria` = `articulo_cat`.`id_categoria`
+				AND articulo_pre.estado='A'
+				ORDER BY `articulo_ter`.`id_articulo` ASC LIMIT 10 ";
 						//INNER JOIN  `cita_estado` ON `cita`.id_estado = `cita_estado`.id_citaest limit 9";
         $rs=mysql_query($query);
         $array=array();
@@ -222,8 +259,9 @@
                                         '{$this->precio}',
                                         '{$this->fecha_desde}',
                                         '{$this->fecha_hasta}',
-										'{$this->id_articulo}')";
-     $result=mysql_query($query) or die ("Problema con query de Insertar");
+										'{$this->id_articulo}',
+										'A')";
+     $result=mysql_query($query) or die (mysql_error());
      return $result;
     }
 
@@ -239,7 +277,8 @@
                 where `articulo_ter`.`id_articulo` =`articulo_pre`.`id_articulo`
                 and `articulo_ter`.`id_categoria`=`articulo_cat`.`id_categoria`
                 and `articulo_ter`.`id_articulo`=`articulo_exi`.`id_articulo`
-				and `articulo_ter`.`id_articulo`='".$articulo."'";
+				and `articulo_ter`.`id_articulo`='".$articulo."'
+				and articulo_pre.estado='A'";
 						//INNER JOIN  `cita_estado` ON `cita`.id_estado = `cita_estado`.id_citaest limit 9";
         $rs=mysql_query($query);
         $array=array();
@@ -267,6 +306,7 @@
                     and bodega.id_sucursal=sucursal.id_sucursal
                     and articulo_ter.id_articulo=articulo_exi.id_articulo
                     and articulo_ter.id_articulo='".$articulo."'";
+					
           $rs=mysql_query($query);
           $array=array();
           while($fila=mysql_fetch_assoc($rs)){
@@ -274,19 +314,16 @@
           }
             return $array;
         }
-     public function mostrar3($id){
-        $query="SELECT `id_articulo`,
-						`articulo_ter`.`descripcion`,
+		
+		public function mostrar3($id){
+        $query="SELECT `articulo_ter`.`id_articulo` ,
+						`articulo_ter`.`descripcion` ,
 						`articulo_pre`.`precio` `precio`
-						FROM `articulo_ter`,`articulo_cat`,`articulo_pre`
-						WHERE  `articulo_ter`.`id_categoria` =`articulo_cat`.`id_categoria`
-						AND `articulo_ter`.`id_precio` = `articulo_pre`.`id_art_pre`
-						AND `id_articulo` =" . $id;
-						//INNER JOIN  `cita_estado` ON `cita`.id_estado = `cita_estado`.id_citaest limit 9";
-
-		//echo $query;
-		//die();
-						
+				FROM `articulo_ter` , `articulo_cat` , `articulo_pre`
+				WHERE `articulo_ter`.`id_categoria` = `articulo_cat`.`id_categoria`
+				AND `articulo_ter`.`id_articulo` = `articulo_pre`.`id_articulo`
+				AND `articulo_pre`.`estado` = 'A'
+				AND `articulo_ter`.`id_articulo` =" . $id;	
         $rs=mysql_query($query);
         $array=array();
         while($fila=mysql_fetch_assoc($rs)){
@@ -296,7 +333,46 @@
         }
 		
 		
-		public function cotizacion_detalle(){
+
+	public function total_cotizacion($id_cotizacion){
+	$query="select sum(total) 'Total'
+			from cotizacion_detalle
+			where id_cotizacion=".$id_cotizacion;
+	$rs=mysql_query($query);
+        if (!$rs) {
+                    echo 'No se pudo ejecutar la consulta: ' . mysql_error();
+                    exit;}
+        $fila = mysql_fetch_row($rs);
+        $num=$fila[0];
+         $num = (double)$num;
+             return $num;
+	}
+	
+	
+	/************************************************************************************/
+	public function cotizacion(){
+    $query="INSERT INTO cotizacion VALUES ('{$this->id_cotizacion}',
+                                        '{$this->resumen}',
+                                        '{$this->fecha_creacion}',
+                                        '{$this->monto_descuento}',
+										'{$this->total}',
+                                        '{$this->sub_total}',
+										'{$this->porcentaje_anticipo}',
+										'{$this->dia_validez}',
+										'{$this->porcentaje_descuento}',
+										'{$this->id_tiempo_entrega}',
+										'{$this->id_cotizacion_estado}',
+										'{$this->id_cita}')";
+    $result=mysql_query($query) or die (mysql_error());
+	//echo $query;
+	if ($result) {
+    	} else {
+			echo 'failure' . mysql_error();
+		}
+	 return $result;
+    }
+	
+	public function cotizacion_detalle(){
     $query="INSERT INTO cotizacion_detalle VALUES ('{$this->id_coti_detalle}',
                                         '{$this->cantidad}',
                                         '{$this->precio}',
@@ -309,9 +385,24 @@
 										'{$this->id_articulo}',
 										'{$this->id_cotizacion}')";
      $result=mysql_query($query) or die ("Problema con query de Insertar");
-	 echo $query;
+	
      return $result;
     }
+	
+	/************************************************************************************/
+	
+	/*****************************************************************************************/
+	public function actualizar_precio($id_articulo){
+      $query= "UPDATE articulo_pre
+	  SET estado='I'
+	  WHERE id_articulo='".$id_articulo."'
+	  AND estado='A'";
+        $resultado = mysql_query($query) or die (mysql_error());
+           return $resultado;
+		}
+	
+	/*****************************************************************************************/
+	
 
 }
 ?>
